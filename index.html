@@ -1,0 +1,331 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nexus Palace – Punktspiel Casino</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap');:root{--bg:#090713;--panel:#171026;--ink:#f8f2ff;--muted:#b7aeca;--gold:#42e8ff;--pink:#ff28b8;--line:#552b70;--magenta:#ff28b8}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#29103c,#090713 68%);color:var(--ink);font:14px/1.55 Comfortaa,system-ui}button,input,select,textarea{font:inherit}*{font-family:Comfortaa,system-ui,sans-serif}button{border:0;border-radius:12px;padding:11px 15px;background:#39204e;color:var(--ink);font-weight:700;cursor:pointer}button.primary{background:linear-gradient(135deg,#42e8ff,#ff28b8);color:#24172b}button.ghost{background:transparent;border:1px solid var(--line)}button:disabled{opacity:.4}.hidden{display:none!important}header,main{max-width:1050px;margin:auto;padding:20px}header{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{display:flex;gap:12px;align-items:center}.logo{font-size:26px;background:linear-gradient(135deg,#42e8ff,#ff28b8);color:#24172b;border-radius:15px;padding:9px}h1{margin:0;font-size:clamp(22px,4vw,34px)}h2{margin:0 0 7px;font-size:20px}.sub,.muted,.status{color:var(--muted);font-size:12px}.panel{background:linear-gradient(145deg,#21112f,#120d20);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.game{background:#21132e;border:1px solid #713b87;border-radius:18px;padding:18px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between}.emoji{font-size:34px}.game p{font-size:12px;color:var(--muted)}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}label{font-size:11px;color:var(--muted)}input{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#0d0917;color:white}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.balance{font-size:27px;color:var(--gold);font-weight:700}.notice{padding:12px;background:#382d43;border:1px solid #594968;border-radius:12px;font-size:11px;color:#ddd}.view{display:none}.view.active{display:block}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.account{padding:12px;border:1px solid var(--line);border-radius:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}.account strong{display:block}.pill{color:var(--gold)}.betbar{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.betbar .field{flex:1;min-width:130px}.roulette{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:480px;margin:15px auto}.number{padding:9px 2px;background:#236044}.number.red{background:#a63849}.number.zero{background:#14784b}.number.sel{outline:3px solid var(--gold)}.wheel{margin:18px auto;border:8px solid #956b3f;border-radius:50%;width:220px;height:220px;display:grid;place-items:center;background:radial-gradient(circle,#21684c,#123e32);font-size:60px;font-weight:bold}.cards,.slots{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:18px}.card{width:64px;height:88px;background:#fff;color:#211b30;border-radius:9px;display:grid;place-items:center;font-size:23px;font-weight:bold}.card.red{color:#bd334e}.reel{width:75px;height:82px;background:white;color:#211b30;border-radius:12px;display:grid;place-items:center;font-size:38px}.poker-hand{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0}.poker-card{width:58px;height:78px;background:#fff;color:#211b30;border-radius:9px;display:grid;place-items:center;font-size:20px;font-weight:700;border:3px solid transparent}.poker-card.red{color:#bd334e}.poker-card.selected{border-color:var(--gold);transform:translateY(-5px)}.poker-card.back{background:linear-gradient(135deg,#49365d,#21172a);color:#f4c96b}.result{text-align:center;min-height:28px;color:var(--gold);font-weight:bold;margin:12px}.rank{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid var(--line)}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--gold);color:#21172a;padding:12px 18px;border-radius:12px}.footer{text-align:center;color:#897d98;font-size:10px;padding:15px}@media(max-width:600px){header,main{padding:14px}.panel{padding:15px}.roulette{gap:3px}.number{font-size:11px;padding:8px 1px}}
+.roulette-status{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;margin:18px 0}.roulette-timer{font-size:42px;font-weight:700;color:var(--gold);line-height:1.2;font-variant-numeric:tabular-nums}.roulette-bets{display:grid;gap:6px;margin:8px 0 16px}.roulette-bet-row{display:flex;justify-content:space-between;gap:10px;padding:8px 11px;background:#21132e;border:1px solid #713b87;border-radius:10px;font-size:12px}.roulette-bet-row.mine{border-color:var(--gold)}#wheelStage{position:relative;width:220px;height:220px}#wheelStage .wheel{margin:0}#ball{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}#ball i{position:absolute;left:-7px;top:-96px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff}
+#wheelStage.spinning .wheel{animation:rouletteWheelSpin 1.05s linear infinite}
+#wheelStage.spinning #ball{animation:rouletteBallOrbit .62s linear infinite}
+#wheelStage.spinning #ball i{box-shadow:0 0 10px #fff,0 0 20px var(--gold)}
+.number.roulette-flash{transform:scale(1.09);outline:2px solid var(--gold);box-shadow:0 0 13px var(--gold);filter:brightness(1.35)}
+@keyframes rouletteWheelSpin{to{transform:rotate(360deg)}}
+@keyframes rouletteBallOrbit{to{transform:rotate(360deg)}}
+.reel{overflow:hidden;position:relative}.reel.rolling{animation:reelRoll .12s linear infinite;filter:blur(1.5px)}@keyframes reelRoll{0%{transform:translateY(-38%)}50%{transform:translateY(0)}100%{transform:translateY(38%)}}</style></head><body>
+<header><div class="brand"><div class="logo">♛</div><div><h1>Nexus Palace</h1><div class="sub">Euer Spielraum · nur virtuelle Punkte</div></div></div><div class="row"><span id="userLabel" class="muted"></span><button id="settingsOpen" class="ghost">⚙</button><button id="logout" class="ghost hidden">Abmelden</button></div></header><main>
+<section id="login" class="view active"><div class="panel"><h2>Willkommen im Nexus Palace ✨</h2><p class="sub">Nutze dieselbe Firebase-Datenbank und denselben Spielschlüssel wie in Punktspiel.</p><div class="notice">Nur virtuelle Spielpunkte – kein Echtgeld, keine echten Gewinne oder Auszahlungen.</div><div class="field"><label>Firebase Realtime Database URL</label><input id="url" placeholder="https://dein-projekt-default-rtdb.europe-west1.firebasedatabase.app"></div><div class="field"><label>Gemeinsamer Spielschlüssel</label><input id="room" placeholder="z. B. punktspiel-freundeskreis"></div><button id="load" class="primary">Accounts laden</button> <span id="status" class="status"></span></div><div class="panel"><div class="row"><h2>Account auswählen</h2><button id="newToggle" class="ghost">＋ Neuer Account</button></div><div id="accounts" class="grid" style="margin-top:12px">Bitte zuerst verbinden.</div></div><div id="loginBox" class="panel hidden"><h2 id="loginTitle">Anmelden</h2><div class="field"><label>Passwort</label><input id="pw" type="password"></div><button id="loginBtn" class="primary">Casino betreten</button></div><div id="createBox" class="panel hidden"><h2>Neuen Account erstellen</h2><p class="sub">Der neue Account wird auch in Punktspiel angelegt und startet dort mit 50 WP.</p><div class="field"><label>Name</label><input id="newName" maxlength="35"></div><div class="field"><label>Passwort (mindestens 4 Zeichen)</label><input id="newPw" type="password"></div><button id="create" class="primary">Account erstellen</button></div></section>
+<section id="lobby" class="view"><div class="panel"><div class="row"><div><h2>Willkommen, <span id="welcome"></span>!</h2><div class="sub">Dein Casino-Guthaben</div><div class="balance"><span id="chips">0</span> Chips</div></div><div><div class="sub">Punktspiel · TP / WP</div><b id="points">–</b><p><button id="pointInfo" class="ghost">Punktspiel öffnen ↗</button></p></div></div></div><div class="nav"><button data-view="lobby">🏠 Spielraum</button><button data-view="exchange">⇄ Wechselstube</button><button data-view="ranking">🏆 Rangliste</button></div><div class="grid"><article class="game"><div><div class="emoji">🎡</div><h2>Roulette</h2><p>Setze auf Zahlen, Rot/Schwarz oder Gerade/Ungerade.</p></div><button class="primary" data-view="roulette">Zum Tisch →</button></article><article class="game"><div><div class="emoji">🃏</div><h2>Blackjack</h2><p>Schlage den Dealer, ohne 21 zu überschreiten.</p></div><button class="primary" data-view="blackjack">Zum Tisch →</button></article><article class="game"><div><div class="emoji">🎰</div><h2>Neon Slots</h2><p>Drei Walzen, drei Symbole – gleiche Symbole bringen Chips.</p></div><button class="primary" data-view="slots">Zum Automaten →</button></article><article class="game"><div><div class="emoji">♠️</div><h2>Poker-Duell</h2><p>5-Card Draw für zwei Spieler. Jeder sieht den Spielstand live.</p></div><button class="primary" data-view="poker">Zum Pokertisch →</button></article><article class="game"><div><div class="emoji">♦️</div><h2>Texas Hold'em</h2><p>Echtes Poker mit 2–6 Spielern: Blinds, Setzrunden, Flop, Turn, River.</p></div><button class="primary" data-view="holdem">Zum Hold'em-Tisch →</button></article></div></section>
+<section id="poker" class="view"><div class="panel"><div class="row"><h2>♠️ Poker-Duell · 5-Card Draw</h2><span><button data-view="holdem" class="primary">♦️ Texas Hold'em (2–6)</button> <button data-view="lobby" class="ghost">← Zurück</button></span></div><div class="notice">Ein vereinfachtes Poker-Duell für genau zwei Spieler: Beide zahlen denselben virtuellen Einsatz, tauschen bis zu drei Karten und vergleichen anschließend ihre beste Fünf-Karten-Hand. Keine Echtgeldfunktion.</div><div id="pokerStatus" class="result">Verbinde mit dem Tisch …</div><div class="grid"><div class="game"><h2>Platz 1</h2><div id="seat0" class="sub">Frei</div><button id="joinPoker" class="primary">Am Tisch Platz nehmen</button> <button id="leavePoker" class="ghost">Vom Tisch aufstehen</button></div><div class="game"><h2>Platz 2</h2><div id="seat1" class="sub">Frei</div><div class="sub">Der zweite Spieler tritt bei.</div></div></div><div class="field"><label>Einsatz pro Spieler (Chips)</label><input id="pokerAnte" type="number" min="1" step="1" value="10"></div><div class="row"><button id="startPoker" class="primary">Neue Runde starten</button><button id="resetPoker" class="ghost">Tisch zurücksetzen</button></div><h2 style="margin-top:22px">Deine Karten</h2><div id="myPokerHand" class="poker-hand"></div><div class="sub" id="pokerHint">Warte auf einen Mitspieler.</div><button id="drawPoker" class="primary" disabled>Kartentausch bestätigen</button><h2 style="margin-top:22px">Gemeinschaft / Ergebnis</h2><div id="opponentPoker" class="poker-hand"></div><div id="pokerResult" class="result"></div></div></section>
+<section id="holdem" class="view"><div class="panel"><div class="row"><h2>♦️ Texas Hold'em</h2><span><button data-view="poker" class="ghost">5-Card-Duell</button> <button data-view="lobby" class="ghost">← Zurück</button></span></div><div class="notice"><b>So geht's:</b> 2–6 Spieler setzen sich mit einem Buy-in an den Tisch. Einsätze werden aus Casino-Chips bezahlt.</div><div id="hdStatus" class="result"></div><div id="hdSeats" style="display:grid;gap:8px"></div><h2 style="margin-top:18px">Gemeinschaftskarten · Pot <span id="hdPot" class="pill">0</span></h2><div id="hdBoard" class="poker-hand"></div><h2>Deine Karten</h2><div id="hdHole" class="poker-hand"></div><div class="betbar"><button id="hdFold" disabled>Fold</button><button id="hdCall" class="primary" disabled>Check</button><div class="field"><label>Raise auf (Gesamteinsatz)</label><input id="hdRaiseTo" type="number" min="1"></div><button id="hdRaise" disabled>Raise</button></div><div class="betbar"><div class="field"><label>Buy-in (Chips)</label><input id="hdBuy" type="number" min="1" value="50"></div><button id="hdJoin" class="primary">Platz nehmen</button><button id="hdLeave" class="ghost">Aufstehen (Chips zurück)</button></div><div class="betbar"><div class="field"><label>Big Blind</label><input id="hdBB" type="number" min="2" value="2"></div><button id="hdStart" class="primary">Runde starten</button><button id="hdReset" class="ghost">Tisch leeren</button></div><div id="hdResult" class="result"></div></div></section>
+<section id="exchange" class="view"><div class="nav"><button data-view="lobby">🏠 Spielraum</button><button data-view="exchange">⇄ Wechselstube</button><button data-view="ranking">🏆 Rangliste</button></div><div class="panel"><h2>⇄ Wechselstube</h2><p class="sub">1 Wettpunkt = 1 Casino-Chip</p><div class="row"><b id="exPoints">0 Wettpunkte</b><b id="exChips" class="pill">0 Chips</b></div><div class="betbar"><div class="field"><label>Anzahl</label><input id="amount" type="number" min="1" step="1" value="10"></div><button id="deposit" class="primary">↓ Einzahlen</button><button id="withdraw" class="ghost">↑ Zurücktauschen</button></div></div></section>
+<section id="ranking" class="view"><div class="nav"><button data-view="lobby">🏠 Spielraum</button><button data-view="exchange">⇄ Wechselstube</button><button data-view="ranking">🏆 Rangliste</button></div><div class="panel"><h2>🏆 Casino-Rangliste</h2><div id="ranks"></div></div></section>
+<section id="roulette" class="view"><div class="panel"><div class="row"><h2>Roulette · Europäischer Kessel</h2><button data-view="lobby" class="ghost">← Zurück</button></div><div class="notice"><b>Europäisches Roulette 0–36:</b> Zahl exakt zahlt 35:1 plus Einsatz; Rot/Schwarz und Gerade/Ungerade zahlen 1:1 plus Einsatz zurück. Alle Einsätze und Gewinne werden in Casino-Chips abgerechnet. Tausche TP/WP zuerst in der Wechselstube um. Klicke auf "Runde starten", um die Drehung zu beginnen.</div><div class="roulette-status"><div><div id="rphase" class="sub">Bereit für Einsätze</div><div id="rtimer" class="roulette-timer">--</div><div id="rTimerLabel" class="sub">Klicke auf "Runde starten" zum Drehen</div></div><div id="wheelStage"><div id="wheel" class="wheel">?</div><div id="ball"><i></i></div></div></div><div class="row" style="justify-content:center;margin:10px 0"><button id="rSingleMode" class="primary">Singleplayer</button><button id="rMultiMode" class="ghost">Multiplayer</button></div><div id="rMultiControls" class="hidden"><div class="row" style="justify-content:center;gap:8px;margin:8px 0"><button id="rJoin" class="ghost">Hinsetzen</button><button id="rLeave" class="ghost">Aufstehen</button></div><div id="rSeats" class="sub" style="text-align:center;margin:6px 0">Noch keine Spieler am Tisch.</div></div><div id="nums" class="roulette"></div><div class="row" style="justify-content:center"><button data-choice="red">Rot</button><button data-choice="black">Schwarz</button><button data-choice="even">Gerade</button><button data-choice="odd">Ungerade</button></div><div class="betbar" style="margin-top:15px"><div class="field"><label>Einsatz in Casino-Chips</label><input id="rbet" type="number" min="1" step="1" value="5"></div><button id="placeRouletteBet" class="primary">Einsatz setzen</button><button id="rStart" class="primary">Runde starten</button></div><div class="row" style="margin-top:10px"><b>Deine Einsätze (aktuelle Runde)</b><span id="rMyTotal" class="pill">0 Punkte</span></div><div id="rMyBets" class="roulette-bets">Noch keine eigenen Einsätze.</div><div id="rRevealWrap" class="hidden"><div class="row"><b>Alle Einsätze am Tisch</b><span id="rAllTotal" class="pill">0 Punkte</span></div><div id="rAllBets" class="roulette-bets"></div></div><div id="rmsg" class="result"></div><div id="rWinText" class="result" style="color:var(--matrix-green,#00ff66);font-size:16px;"></div></div></section>
+<section id="blackjack" class="view"><div class="panel"><div class="row"><h2>🃏 Blackjack</h2><button data-view="lobby" class="ghost">← Zurück</button></div><div class="field"><label>Einsatz</label><input id="bjbet" type="number" min="1" value="5"></div><div class="row"><b>Dealer <span id="ds" class="pill"></span></b></div><div id="dc" class="cards"></div><div class="row"><b>Du <span id="ps" class="pill"></span></b></div><div id="pc" class="cards"></div><button id="startBJ" class="primary">Neue Runde</button> <button id="hit" disabled>Ziehen</button> <button id="stand" disabled>Stehen</button><div id="bjmsg" class="result"></div></div></section>
+<section id="slots" class="view"><div class="panel"><div class="row"><h2>🎰 Neon Slots</h2><button data-view="lobby" class="ghost">← Zurück</button></div><div class="slots"><div id="s1" class="reel">❔</div><div id="s2" class="reel">❔</div><div id="s3" class="reel">❔</div></div><div class="betbar"><div class="field"><label>Einsatz</label><input id="sbet" type="number" min="1" value="5"></div><button id="spinSlots" class="primary">Drehen</button></div><div id="smsg" class="result"></div></div></section>
+<section id="settings" class="view"><div class="panel"><div class="row"><h2>⚙ Einstellungen</h2><button data-view="lobby" class="ghost">Zurück</button></div><div class="field"><label>Firebase URL</label><input id="setUrl"></div><div class="field"><label>Spielschlüssel</label><input id="setRoom"></div><button id="saveSettings" class="primary">Verbindung prüfen & speichern</button><p id="setStatus" class="status"></p></div></section>
+</main><div class="footer">Nexus Palace · ausschließlich virtuelle Punkte · kein Echtgeld</div><div id="toast" class="toast hidden"></div>
+<script>
+(()=>{const $=id=>document.getElementById(id),ADMIN='CasinoGeld',reds=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]),symbols=['🍒','💎','🔔','🍀','⭐','7️⃣'];let cfg={url:'',room:''},ps=null,cs={accounts:{}},who=null,chosen=null,betChoice=null,bj=null,poker=null,pokerSelected=new Set(),pokerBusy=false,serverTimeOffset=0;
+const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function toast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2400)}function view(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));window.scrollTo(0,0)}function url(kind){return cfg.url.replace(/\/$/,'')+'/'+kind+'/'+encodeURIComponent(cfg.room)+'.json'}async function get(u){let r=await fetch(u);if(!r.ok)throw Error('HTTP '+r.status);let d=r.headers.get('Date');if(d){let t=Date.parse(d);if(Number.isFinite(t))serverTimeOffset=t-Date.now()}return r.json()}async function put(u,x){let r=await fetch(u,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(x)});if(!r.ok)throw Error('HTTP '+r.status)}async function load(){if(!cfg.url||!cfg.room)throw Error('Firebase-URL und Spielschlüssel fehlen.');let [p,c]=await Promise.all([get(url('punktspiel')),get(url('casino'))]);if(!p||!Array.isArray(p.people))throw Error('Kein Punktspiel gefunden.');ps=p;cs=c&&c.accounts?c:{accounts:{}}}async function saveP(){ps._updatedAt=Math.max(Date.now(),Number(ps._updatedAt||0)+1);await put(url('punktspiel'),ps)}async function saveC(){let id=who??chosen?.id;if(id!=null&&cs.accounts[String(id)])await put(accountUrl(id),cs.accounts[String(id)])}function accountUrl(id){return cfg.url.replace(/\/$/,'')+'/casino/'+encodeURIComponent(cfg.room)+'/accounts/'+encodeURIComponent(id)+'.json'}function pokerUrl(){return cfg.url.replace(/\/$/,'')+'/casino/'+encodeURIComponent(cfg.room)+'/poker.json'}function preservePointFields(before,after){if(!before||!after||!Array.isArray(before.people)||!Array.isArray(after.people))return after;after.people=after.people.map(np=>{let op=before.people.find(x=>String(x.id)===String(np.id));if(!op)return np;for(let k of ['tp','dailyPoints'])if(Object.prototype.hasOwnProperty.call(op,k)&&!Object.prototype.hasOwnProperty.call(np,k))np[k]=op[k];return np});for(let k of ['daily','dailyPoints'])if(before[k]&&typeof before[k]==='object'){after[k]=after[k]&&typeof after[k]==='object'?after[k]:{};for(let id of Object.keys(before[k]))if(!(id in after[k]))after[k][id]=before[k][id]}return after}
+async function atomicJson(u,mutate){for(let i=0;i<8;i++){let r=await fetch(u,{headers:{'X-Firebase-ETag':'true'}});if(!r.ok)throw Error('Firebase-Lesezugriff fehlgeschlagen: '+r.status);let etag=r.headers.get('ETag'),date=r.headers.get('Date');if(date){let server=Date.parse(date);if(Number.isFinite(server))serverTimeOffset=server-Date.now()}let v=await r.json(),next=mutate(v);if(u===url('punktspiel'))next=preservePointFields(v,next);let w=await fetch(u,{method:'PUT',headers:{'Content-Type':'application/json','If-Match':etag||'null_etag'},body:JSON.stringify(next)});if(w.status===412)continue;if(!w.ok)throw Error('Firebase-Schreibzugriff fehlgeschlagen: '+w.status);return next}throw Error('Der Tisch wurde gleichzeitig geändert.')}async function pokerRead(){poker=await get(pokerUrl()).catch(()=>null);renderPoker()}async function pokerChange(fn){poker=await atomicJson(pokerUrl(),old=>fn(old||{players:[],status:'waiting'}));renderPoker();return poker}function person(id){return ps.people.find(p=>Number(p.id)===Number(id))}function acct(p){return cs.accounts[String(p.id)]}async function hash(s){let b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function todayKey(){const d=new Date(Date.now()+serverTimeOffset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+// Die Punktspiel-Daten liegen in people[].tp / tpDay / points.
+// Das separate daily-Array ist nur der Tagesverlauf und kein persönlicher Kontostand.
+function pointBalances(p){const tpDay=String(p?.tpDay||'');return {tp:tpDay===todayKey()?Math.max(0,Number(p?.tp)||0):0,wp:Math.max(0,Number(p?.points??p?.wp??p?.balance)||0)}}
+function pointSummary(p){const b=pointBalances(p);return {tp:b.tp,wp:b.wp}}
+// TP werden zuerst verwendet, danach WP. Ein Beleg ermöglicht eine exakte Rückbuchung.
+async function changePoints(id,delta,receipt=null){let usedTP=0,usedWP=0;const updated=await atomicJson(url('punktspiel'),data=>{
+ if(!data||!Array.isArray(data.people))throw Error('Punktspiel-Daten fehlen.');
+ const p=data.people.find(x=>String(x.id)===String(id));if(!p)throw Error('Spieler nicht gefunden.');
+ if(receipt){p.tp=Math.max(0,Number(p.tp)||0)+Number(receipt.tp||0);p.points=Math.max(0,Number(p.points)||0)+Number(receipt.wp||0);if(receipt.tpDay)p.tpDay=receipt.tpDay;usedTP=Number(receipt.tp)||0;usedWP=Number(receipt.wp)||0;}
+ else if(delta<0){let rest=Math.floor(Math.abs(Number(delta)));if(!Number.isSafeInteger(rest)||rest<1)throw Error('Ungültiger Betrag.');const b=pointBalances(p);if(b.tp+b.wp<rest)throw Error(`Nicht genügend Punkte: ${b.tp} TP und ${b.wp} WP verfügbar.`);usedTP=Math.min(b.tp,rest);usedWP=rest-usedTP;p.tp=b.tp-usedTP;if(p.tpDay!==todayKey())p.tpDay=todayKey();p.points=b.wp-usedWP;if('wp' in p)p.wp=p.points;if('balance' in p)p.balance=p.points;}
+ else if(delta>0){const n=Math.floor(Number(delta));if(!Number.isSafeInteger(n)||n<1)throw Error('Ungültiger Betrag.');p.points=(Number(p.points)||0)+n;if('wp' in p)p.wp=p.points;if('balance' in p)p.balance=p.points;usedWP=n;}
+ else throw Error('Ungültiger Betrag.');
+ data._updatedAt=Math.max(Date.now(),Number(data._updatedAt||0)+1);return data;
+ });ps=updated;return {tp:usedTP,wp:usedWP,tpDay:todayKey()};}
+// Spieleinsätze werden ausschließlich aus dem Casino-Chipkonto bezahlt.
+async function debitChips(id,amount){amount=Math.floor(Number(amount));if(!Number.isSafeInteger(amount)||amount<1)throw Error('Ungültiger Chip-Einsatz.');const updated=await atomicJson(accountUrl(id),a=>{if(!a||Number(a.chips||0)<amount)throw Error('Nicht genug Casino-Chips. Bitte zuerst in der Wechselstube einzahlen.');return {...a,chips:Number(a.chips||0)-amount}});cs.accounts[String(id)]=updated;return amount;}
+async function refundChips(id,amount){amount=Math.floor(Number(amount)||0);if(amount<1)return;await creditChips(id,amount)}
+async function creditChips(id,amount){amount=Math.floor(Number(amount));if(!Number.isSafeInteger(amount)||amount<0)throw Error('Ungültige Auszahlung.');if(!amount)return;const updated=await atomicJson(accountUrl(id),a=>({...a,chips:(Number(a?.chips)||0)+amount}));cs.accounts[String(id)]=updated;}
+async function ensureDailyForUser(id){/* Tagespunkte werden ausschließlich vom Punktspiel verwaltet. */}
+
+$('load').onclick=async()=>{cfg={url:$('url').value.trim(),room:$('room').value.trim()};try{await load();localStorage.setItem('casinoCfg',JSON.stringify(cfg));$('status').textContent='Verbunden';renderAccounts()}catch(e){$('status').textContent=e.message}};function renderAccounts(){$('accounts').innerHTML=ps.people.map(p=>{const b=pointBalances(p);return `<div class="account"><div><strong>${safe(p.name)}</strong><span class="sub">${b.tp} TP · ${b.wp} WP · ${acct(p)?(Number(acct(p).chips)||0)+' Chips':'noch kein Casino-Account'}</span></div><button class="primary" data-acct="${p.id}">${acct(p)?'Auswählen':'Einrichten'}</button></div>`}).join('')||'Keine Teilnehmer in Punktspiel.'}
+$('accounts').onclick=e=>{let b=e.target.closest('[data-acct]');if(!b)return;chosen=person(b.dataset.acct);if(acct(chosen)){$('loginTitle').textContent='Anmelden: '+chosen.name;$('loginBox').classList.remove('hidden');$('createBox').classList.add('hidden')}else{$('newName').value=chosen.name;$('newName').disabled=true;$('createBox').classList.remove('hidden');$('loginBox').classList.add('hidden')}};$('newToggle').onclick=()=>{chosen=null;$('newName').disabled=false;$('newName').value='';$('createBox').classList.toggle('hidden')};$('create').onclick=async()=>{let name=$('newName').value.trim(),pw=$('newPw').value;if(!name||pw.length<4){toast('Name und Passwort mit mindestens 4 Zeichen eingeben.');return}try{if(!ps)await load();let p=chosen;if(!p){if(ps.people.some(x=>x.name.toLowerCase()===name.toLowerCase()))throw Error('Name existiert bereits.');let id=Math.max(0,...ps.people.map(x=>+x.id||0))+1;p={id,name,points:50,tp:0,tpDay:'',color:'#d69a86'};ps.people.push(p);ps.nextId=Math.max(ps.nextId||1,id+1);await saveP()}cs.accounts[String(p.id)]={personId:p.id,name:p.name,passwordHash:await hash(pw),chips:0};await saveC();chosen=p;renderAccounts();$('createBox').classList.add('hidden');$('loginTitle').textContent='Anmelden: '+p.name;$('loginBox').classList.remove('hidden');toast('Account erstellt!')}catch(e){toast(e.message)}};$('loginBtn').onclick=async()=>{if(!chosen)return;let a=acct(chosen),pw=$('pw').value;if(pw!==ADMIN&&await hash(pw)!==a.passwordHash&&await hash(pw)!==chosen.pw){toast('Passwort stimmt nicht.');return}who=chosen.id;enter()};function enter(){view('lobby');$('logout').classList.remove('hidden');$('userLabel').textContent=person(who).name;$('welcome').textContent=person(who).name;refresh();ensureDailyForUser(who).then(()=>{refresh()}).catch(e=>toast('Tagespunkte Fehler: '+e.message));pokerRead().catch(()=>{});hdRead().catch(()=>{});rouletteRead().then(rouletteTick).catch(()=>{});if(!window.__casinoSyncTimer)window.__casinoSyncTimer=setInterval(async()=>{try{await load();refresh();await pokerRead();await hdRead();await rouletteRead();await rouletteTick()}catch(e){}},1000)}$('logout').onclick=()=>{who=null;$('logout').classList.add('hidden');$('userLabel').textContent='';view('login')};function refresh(){let p=person(who),a=acct(p);if(!p||!a)return;$('chips').textContent=a.chips;let pb=pointBalances(p);$('points').textContent=pb.tp+' TP · '+pb.wp+' WP';$('exPoints').textContent=pb.tp+' TP + '+pb.wp+' WP';$('exChips').textContent=a.chips+' Chips';$('ranks').innerHTML=ps.people.map(p=>({p,a:acct(p)?.chips||0})).sort((x,y)=>y.a-x.a).map((x,i)=>`<div class="rank"><span>${['🥇','🥈','🥉'][i]||'♟'} ${safe(x.p.name)}</span><b class="pill">${x.a} Chips</b></div>`).join('')}
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{refresh();view(b.dataset.view)});$('settingsOpen').onclick=()=>{$('setUrl').value=cfg.url;$('setRoom').value=cfg.room;view('settings')};$('saveSettings').onclick=async()=>{cfg={url:$('setUrl').value.trim(),room:$('setRoom').value.trim()};try{await load();localStorage.setItem('casinoCfg',JSON.stringify(cfg));$('setStatus').textContent='Firebase-Verbindung erfolgreich.';toast('Verbindung gespeichert.')}catch(e){$('setStatus').textContent=e.message}};$('deposit').onclick=async()=>{let n=+$('amount').value;if(!Number.isSafeInteger(n)||n<1)return toast('Bitte einen gültigen Betrag eingeben.');let receipt=null,chipsAdded=false;try{receipt=await changePoints(who,-n);await creditChips(who,n);chipsAdded=true;await load();refresh();renderAccounts();toast(n+' Punkte in Casino-Chips umgewandelt.')}catch(e){if(receipt&&!chipsAdded)await changePoints(who,0,receipt).catch(()=>{});await load().catch(()=>{});refresh();toast('Einzahlen fehlgeschlagen: '+e.message)}};$('withdraw').onclick=async()=>{let n=+$('amount').value,p=person(who),a=acct(p);if(!Number.isSafeInteger(n)||n<1||!a||Number(a.chips||0)<n)return toast('Ungültiger Betrag oder zu wenig Chips.');let chipsRemoved=false,pointsAdded=false;try{await atomicJson(accountUrl(who),old=>{if(!old||Number(old.chips||0)<n)throw Error('Nicht genug Casino-Chips.');return {...old,chips:Number(old.chips||0)-n}});chipsRemoved=true;await changePoints(who,n);pointsAdded=true;await load();refresh();renderAccounts();toast(n+' Chips zurück in WP getauscht.')}catch(e){if(chipsRemoved&&!pointsAdded)await creditChips(who,n).catch(()=>{});await load().catch(()=>{});refresh();toast('Zurücktauschen fehlgeschlagen: '+e.message)}};
+
+// ROULETTE LOGIK BEHOBEN
+let roulette=null,rouletteBusy=false,lastAnimatedRound=null,rouletteAnimation=null;
+let rouletteFlashTimer=null;
+function setRouletteSpinVisual(active){
+  const stage=$('wheelStage');
+  if(stage)stage.classList.toggle('spinning',!!active);
+  if(rouletteFlashTimer){clearInterval(rouletteFlashTimer);rouletteFlashTimer=null}
+  document.querySelectorAll('.number').forEach(x=>x.classList.remove('roulette-flash'));
+  if(active){
+    rouletteFlashTimer=setInterval(()=>{
+      const nums=[...document.querySelectorAll('.number')];
+      nums.forEach(x=>x.classList.remove('roulette-flash'));
+      if(nums.length)nums[Math.floor(Math.random()*nums.length)].classList.add('roulette-flash');
+    },85);
+  }
+}
+
+function rouletteUrl(){return cfg.url.replace(/\/$/,'')+'/casino/'+encodeURIComponent(cfg.room)+'/roulette.json'}
+async function rouletteRead(){roulette=await get(rouletteUrl()).catch(()=>null);renderRoulette()}
+async function rouletteChange(fn){roulette=await atomicJson(rouletteUrl(),old=>fn(old||{roundId:0,phase:'waiting',bets:[],players:[]}));renderRoulette();return roulette}
+function rouletteChoiceName(b){return b.type==='num'?'Zahl '+b.v:({red:'Rot',black:'Schwarz',even:'Gerade',odd:'Ungerade'}[b.type]||b.type)}
+function rouletteWins(b,n){return b.type==='num'?n===b.v:b.type==='red'?reds.has(n):b.type==='black'?n!==0&&!reds.has(n):b.type==='even'?n!==0&&n%2===0:n!==0&&n%2===1}
+function roulettePayoutMultiplier(b){return b.type==='num'?35:1}
+function rouletteNow(){return Date.now()+serverTimeOffset}
+let rouletteMode='single';
+let localSingleBets=[];
+
+async function rouletteTick(){
+  if(!who||!cfg.url||!cfg.room)return;
+  if(rouletteMode==='multi'){
+    if(!roulette)await rouletteRead();
+    let t=roulette;
+    if(t?.phase==='spinning'){
+      if(lastAnimatedRound!==t.roundId){
+        lastAnimatedRound=t.roundId;
+        playRouletteAnimation(t);
+      }
+      if(rouletteNow()>=t.spinStartedAt+5000)await settleRoulette(t.roundId);
+    }
+    renderRoulette();
+  }
+}
+
+function renderRoulette(){
+  let t=rouletteMode==='multi'?(roulette||{phase:'waiting',bets:[],players:[]}):{phase:'waiting',bets:localSingleBets,players:[]};
+  let all=t.bets||[],mine=rouletteMode==='multi'?all.filter(b=>String(b.playerId)===String(who)):localSingleBets;
+  
+  $('rphase').textContent=t.phase==='spinning'?'Kessel dreht...':t.phase==='settling'?'Auswertung läuft...':t.phase==='finished'?'Runde beendet':'Warte auf "Runde starten"';
+  $('rTimerLabel').textContent='Verwende "Einsatz setzen", dann "Runde starten".';
+  
+  $('placeRouletteBet').disabled=t.phase==='spinning'||t.phase==='settling';
+  $('rStart').disabled=t.phase==='spinning'||t.phase==='settling'||mine.length===0;
+  
+  $('rMultiControls').classList.toggle('hidden',rouletteMode!=='multi');
+  if(rouletteMode==='multi'){
+    $('rSeats').textContent=(t.players||[]).length?'Am Tisch: '+t.players.map(x=>x.name).join(' · '):'Noch keine Spieler am Tisch.';
+    $('rJoin').disabled=(t.players||[]).some(x=>String(x.id)===String(who))||['spinning','settling'].includes(t.phase);
+    $('rLeave').disabled=!(t.players||[]).some(x=>String(x.id)===String(who))||['spinning','settling'].includes(t.phase);
+  }
+
+  $('rMyTotal').textContent=mine.reduce((n,b)=>n+b.amount,0)+' Punkte';
+  $('rMyBets').innerHTML=mine.length?mine.map(b=>`<div class="roulette-bet-row mine"><span>${safe(rouletteChoiceName(b))}</span><b>${b.amount} Punkte</b></div>`).join(''):'Noch keine eigenen Einsätze.';
+  
+  $('rRevealWrap').classList.toggle('hidden',rouletteMode==='single');
+  if(rouletteMode==='multi'){
+    $('rAllTotal').textContent=all.reduce((n,b)=>n+b.amount,0)+' Punkte';
+    $('rAllBets').innerHTML=all.length?all.map(b=>`<div class="roulette-bet-row ${String(b.playerId)===String(who)?'mine':''}"><span>${safe(b.playerName)} · ${safe(rouletteChoiceName(b))}</span><b>${b.amount} Punkte</b></div>`).join(''):'Keine Einsätze.';
+  }
+
+  if(t.phase==='finished'){
+    $('wheel').textContent=t.result;
+    $('rmsg').textContent=t.summary||`Ergebnis: ${t.result} (${reds.has(t.result)?'Rot':t.result===0?'Grün':'Schwarz'})`;
+  }else if(t.phase!=='spinning'&&t.phase!=='settling'){
+    $('rmsg').textContent='';
+  }
+  document.querySelectorAll('.number').forEach(x=>x.classList.toggle('sel',betChoice?.type==='num'&&Number(x.dataset.num)===betChoice.v));
+}
+
+// Einsätze vorbereiten
+async function placeRouletteBet(){
+  let amount=Math.floor(+$('rbet').value),choice=betChoice;
+  if(!choice||!Number.isSafeInteger(amount)||amount<1)return toast('Wähle ein Feld und einen gültigen Einsatz.');
+  if(rouletteBusy)return;
+  rouletteBusy=true;
+  try{
+    let receipt=await debitChips(who,amount);
+    let newBet={id:String(who)+'_'+Date.now(),playerId:who,playerName:person(who).name,type:choice.type,v:choice.v??null,amount,receipt};
+    if(rouletteMode==='single'){
+      localSingleBets.push(newBet);
+      toast(amount+' Chips auf '+rouletteChoiceName(newBet)+' gesetzt.');
+    }else{
+      await rouletteChange(old=>{
+        if(['spinning','settling'].includes(old.phase))throw Error('Runde läuft bereits.');
+        if(!(old.players||[]).some(x=>String(x.id)===String(who)))throw Error('Du sitzt nicht am Tisch.');
+        return {...old,bets:[...(old.bets||[]),newBet]}
+      });
+      toast(amount+' Chips gesetzt.');
+    }
+    await load();refresh();renderRoulette();
+  }catch(e){toast(e.message)}finally{rouletteBusy=false}
+}
+
+$('nums').innerHTML=Array.from({length:37},(_,n)=>`<button class="number ${n===0?'zero':reds.has(n)?'red':''}" data-num="${n}">${n}</button>`).join('');
+$('nums').onclick=e=>{let b=e.target.closest('[data-num]');if(!b)return;betChoice={type:'num',v:+b.dataset.num};document.querySelectorAll('.number').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};
+document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{betChoice={type:b.dataset.choice};document.querySelectorAll('.number').forEach(x=>x.classList.remove('sel'));toast('Ausgewählt: '+b.textContent)});
+$('placeRouletteBet').onclick=placeRouletteBet;
+
+$('rSingleMode').onclick=()=>{rouletteMode='single';$('rSingleMode').className='primary';$('rMultiMode').className='ghost';localSingleBets=[];$('rWinText').textContent='';renderRoulette()};
+$('rMultiMode').onclick=()=>{rouletteMode='multi';$('rMultiMode').className='primary';$('rSingleMode').className='ghost';localSingleBets=[];$('rWinText').textContent='';renderRoulette()};
+
+$('rJoin').onclick=async()=>{try{await rouletteChange(t=>{t.players=t.players||[];if(!t.players.some(x=>String(x.id)===String(who)))t.players.push({id:who,name:person(who).name});return t});toast('Du sitzt am Tisch.')}catch(e){toast(e.message)}};
+$('rLeave').onclick=async()=>{try{await rouletteChange(t=>{t.players=(t.players||[]).filter(x=>String(x.id)!==String(who));return t});toast('Du bist aufgestanden.')}catch(e){toast(e.message)}};
+
+// RUNDE STARTEN BUTTON
+$('rStart').onclick=async()=>{
+  if(rouletteBusy)return;
+  $('rWinText').textContent='';
+  if(rouletteMode==='single'){
+    if(!localSingleBets.length)return toast('Setze zuerst mindestens einen Einsatz.');
+    rouletteBusy=true;
+    let result=Math.floor(Math.random()*37);
+    $('rmsg').textContent='Der Kessel dreht …';
+    
+    // Animate
+    let w=$('wheel');
+    w.animate([{transform:'rotate(0deg)'},{transform:'rotate(1440deg)'}],{duration:4000,easing:'cubic-bezier(.12,.72,.18,1)'});
+    let iv=setInterval(()=>w.textContent=String(Math.floor(Math.random()*37)),75);
+    
+    setTimeout(async()=>{
+      clearInterval(iv);
+      w.textContent=String(result);
+      let totalPayout=0,hasWon=false,pName=person(who).name;
+      
+      for(let b of localSingleBets){
+        if(rouletteWins(b,result)){
+          let mult=roulettePayoutMultiplier(b);
+          let payout=b.amount+(b.amount*mult);
+          totalPayout+=payout;
+          hasWon=true;
+        }
+      }
+      
+      if(hasWon){
+        await creditChips(who,totalPayout);
+        $('rWinText').textContent=`${pName} hat gewonnen und seinen Einsatz verdoppelt! (${totalPayout} Chips gutgeschrieben)\n${victoryLine('win')}`;
+        snd('win');
+      }else{
+        $('rmsg').textContent='Leider verloren. Ergebnis: '+result+' · '+victoryLine('lose');
+        snd('lose');
+      }
+      localSingleBets=[];
+      rouletteBusy=false;
+      await load();refresh();renderRoulette();
+    },4000);
+
+  }else{
+    // Multiplayer Start
+    try{
+      await rouletteChange(t=>{
+        if(!(t.players||[]).some(x=>String(x.id)===String(who)))throw Error('Setze dich zuerst an den Tisch.');
+        if(['spinning','settling'].includes(t.phase))throw Error('Es läuft bereits eine Runde.');
+        if(!(t.bets||[]).length)throw Error('Es wurden noch keine Einsätze getätigt.');
+        return {...t,roundId:(t.roundId||0)+1,phase:'spinning',spinStartedAt:rouletteNow(),result:Math.floor(Math.random()*37)}
+      });
+    }catch(e){toast(e.message)}
+  }
+};
+
+function playRouletteAnimation(t){
+  let w=$('wheel'),elapsed=Math.max(0,rouletteNow()-t.spinStartedAt);
+  let remaining=Math.max(0,5000-elapsed);
+  setRouletteSpinVisual(true);
+  w.animate([{transform:'rotate(0deg)'},{transform:'rotate(1440deg)'}],{duration:remaining||1,easing:'cubic-bezier(.12,.72,.18,1)',fill:'forwards'});
+  let iv=setInterval(()=>{
+    if(rouletteNow()>=t.spinStartedAt+5000){
+      clearInterval(iv);
+      setRouletteSpinVisual(false);
+      w.textContent=t.result;
+      settleRoulette(t.roundId).catch(()=>{});
+    }
+  },100);
+}
+
+async function settleRoulette(roundId){
+  if(rouletteBusy)return;rouletteBusy=true;
+  try{
+    let locked=await atomicJson(rouletteUrl(),old=>{
+      if(old.phase==='spinning')return {...old,phase:'settling'};
+      return old;
+    });
+    if(!locked||locked.phase!=='settling'||locked.roundId!==roundId)return;
+    let bets=locked.bets||[],byPlayer={},winners=[];
+    
+    bets.forEach(b=>{
+      if(rouletteWins(b,locked.result)){
+        let mult=roulettePayoutMultiplier(b);
+        let payout=b.amount+(b.amount*mult);
+        byPlayer[String(b.playerId)]=(byPlayer[String(b.playerId)]||0)+payout;
+        winners.push(b.playerName);
+      }
+    });
+
+    for(let [id,payout] of Object.entries(byPlayer)){
+      if(payout)await creditChips(id,payout);
+    }
+
+    let summary=`Ergebnis: ${locked.result} (${reds.has(locked.result)?'Rot':locked.result===0?'Grün':'Schwarz'}).`;
+    if(winners.length){
+      let uniqueWin=[...new Set(winners)].join(', ');
+      $('rWinText').textContent=`${uniqueWin} hat gewonnen und seinen Einsatz verdoppelt!\n${victoryLine('win')}`;
+    }else{
+      $('rWinText').textContent='Keine Gewinner in dieser Runde.\n'+victoryLine('lose');
+    }
+
+    await atomicJson(rouletteUrl(),old=>({...old,phase:'finished',bets:[],summary}));
+    await load();refresh();await rouletteRead();
+  }catch(e){console.error(e)}finally{rouletteBusy=false}
+}
+
+// RESTLICHE CASINO-SPIELE (Blackjack, Slots, Poker, Holdem)
+function card(){let v=Math.floor(Math.random()*13)+1,s=['♠','♥','♦','♣'][Math.floor(Math.random()*4)];return {v:v>10?10:v===1?11:v,t:(v===1?'A':v===11?'J':v===12?'Q':v===13?'K':v)+s,red:s==='♥'||s==='♦'}}
+function score(h){let n=h.reduce((s,c)=>s+c.v,0),a=h.filter(c=>c.v===11).length;while(n>21&&a-- >0)n-=10;return n}
+function draw(id,h,hide=false){$(id).innerHTML=h.map((c,i)=>`<div class="card ${c.red?'red':''}">${hide&&i===1?'?':c.t}</div>`).join('')}
+function renderBJ(hide){draw('pc',bj.p);draw('dc',bj.d,hide);$('ps').textContent=score(bj.p);$('ds').textContent=hide?'?':score(bj.d)}
+$('startBJ').onclick=async()=>{let n=+$('bjbet').value;if(!Number.isInteger(n)||n<1)return toast('Ungültiger Einsatz.');try{await debitChips(who,n)}catch(e){return toast(e.message)}bj={p:[card(),card()],d:[card(),card()],n,active:true};renderBJ(true);$('bjmsg').textContent='Du bist dran.';$('hit').disabled=$('stand').disabled=false;refresh();if(score(bj.p)===21)finishBJ()};
+$('hit').onclick=()=>{if(!bj?.active)return;bj.p.push(card());renderBJ(true);if(score(bj.p)>=21)finishBJ()};
+$('stand').onclick=()=>{if(!bj?.active)return;while(score(bj.d)<17)bj.d.push(card());finishBJ()};
+async function finishBJ(){if(!bj?.active)return;bj.active=false;while(score(bj.d)<17)bj.d.push(card());let p=score(bj.p),d=score(bj.d),msg;if(p>21)msg='Über 21 – Dealer gewinnt.';else if(d>21||p>d){await creditChips(who,bj.n*2);msg=`Gewonnen! +${bj.n} Chips Nettogewinn.`}else if(p===d){await creditChips(who,bj.n);msg='Unentschieden – Einsatz zurück.'}else msg='Dealer gewinnt.';renderBJ(false);snd(msg.startsWith('Gewonnen')?'win':msg.startsWith('Unent')?'click':'lose');$('bjmsg').textContent=msg+'\n'+victoryLine(msg.startsWith('Gewonnen')?'win':msg.startsWith('Unent')?'tie':'lose');$('hit').disabled=$('stand').disabled=true;await load();refresh()}
+
+$('spinSlots').onclick=async()=>{let n=+$('sbet').value;if(!Number.isInteger(n)||n<1)return toast('Ungültiger Einsatz.');try{await debitChips(who,n)}catch(e){return toast(e.message)}let r=[0,1,2].map(()=>symbols[Math.floor(Math.random()*symbols.length)]);$('spinSlots').disabled=true;await rollReels(r);$('spinSlots').disabled=false;let same=r[0]===r[1]&&r[1]===r[2],pair=r[0]===r[1]||r[0]===r[2]||r[1]===r[2],pay=same?n*5:pair?n*2:0;if(pay)await creditChips(who,pay);snd(pay?'win':'lose');$('smsg').textContent=(pay?`Auszahlung ${pay} Chips.`:`Keine Kombination – ${n} Chips verloren.`)+'\n'+victoryLine(pay?'win':'lose');await load();refresh()};
+const victoryLines=['🎉 Läuft bei dir! Das Casino muss kurz durchatmen.','🏆 Stark gespielt – heute bist du der Boss am Tisch!','✨ Das Glück hat heute eindeutig deinen Namen gelesen.','💎 Sauber abgeräumt! Gönn dir den Triumph.'];
+const defeatLines=['😅 Autsch! Heute hatte das Glück wohl andere Pläne.','🍀 Kopf hoch – die nächste Runde kann alles drehen!','💸 Diesmal gewinnt das Haus. Revanche?'];
+const tieLines=['🤝 Gleichstand! Niemand muss den Tisch geknickt verlassen.','⚖️ Punktlandung – diesmal steht es unentschieden.'];
+function victoryLine(kind){let a=kind==='win'?victoryLines:kind==='tie'?tieLines:defeatLines;return a[Math.floor(Math.random()*a.length)]}
+let ac;function snd(k){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();let t=ac.currentTime,q={win:[523,659,784,1047],lose:[330,247,196]}[k]||[600];q.forEach((f,i)=>{let o=ac.createOscillator(),g=ac.createGain();o.type=k==='lose'?'sawtooth':'square';o.frequency.value=f;g.gain.setValueAtTime(.08,t+i*.11);g.gain.exponentialRampToValueAtTime(.001,t+i*.11+.1);o.connect(g);g.connect(ac.destination);o.start(t+i*.11);o.stop(t+i*.11+.11)})}catch(e){}}
+function rollReels(r){return new Promise(res=>{let els=[1,2,3].map(i=>$('s'+i));els.forEach(e=>e.classList.add('rolling'));let iv=setInterval(()=>els.forEach((e,i)=>{if(e.classList.contains('rolling'))e.textContent=symbols[Math.floor(Math.random()*symbols.length)]}),55);[1700,2200,2700].forEach((t,i)=>setTimeout(()=>{els[i].classList.remove('rolling');els[i].textContent=r[i];snd('click');if(i===2){clearInterval(iv);res()}},t))})}
+
+// Poker Duell Logic
+const pokerSuits=['♠','♥','♦','♣'],pokerRanks=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+function pokerDeck(){let d=[];for(let s of pokerSuits)for(let i=0;i<13;i++)d.push({r:i+2,t:pokerRanks[i],s,red:s==='♥'||s==='♦'});for(let i=d.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function pokerEval(hand){let vals=hand.map(c=>c.r).sort((a,b)=>b-a),counts={};vals.forEach(v=>counts[v]=(counts[v]||0)+1);let groups=Object.entries(counts).map(([v,n])=>[n,+v]).sort((a,b)=>b[0]-a[0]||b[1]-a[1]),flush=hand.every(c=>c.s===hand[0].s),uniq=[...new Set(vals)].sort((a,b)=>b-a),straight=uniq.length===5&&((uniq[0]-uniq[4]===4)||uniq.join(',')==='14,5,4,3,2'),high=uniq.join(',')==='14,5,4,3,2'?5:uniq[0];let rank,k;if(straight&&flush){rank=8;k=[high]}else if(groups[0][0]===4){rank=7;k=[groups[0][1],groups[1][1]]}else if(groups[0][0]===3&&groups[1][0]===2){rank=6;k=[groups[0][1],groups[1][1]]}else if(flush){rank=5;k=vals}else if(straight){rank=4;k=[high]}else if(groups[0][0]===3){rank=3;k=[groups[0][1],...groups.slice(1).map(x=>x[1]).sort((a,b)=>b-a)]}else if(groups[0][0]===2&&groups[1][0]===2){rank=2;k=[Math.max(groups[0][1],groups[1][1]),Math.min(groups[0][1],groups[1][1]),groups[2][1]]}else if(groups[0][0]===2){rank=1;k=[groups[0][1],...groups.slice(1).map(x=>x[1]).sort((a,b)=>b-a)]}else{rank=0;k=vals}return {rank,k}}
+const pokerNames=['High Card','Ein Paar','Zwei Paare','Drilling','Straße','Flush','Full House','Vierling','Straight Flush'];
+function pokerCompare(a,b){let x=pokerEval(a),y=pokerEval(b);if(x.rank!==y.rank)return x.rank>y.rank?1:-1;for(let i=0;i<Math.max(x.k.length,y.k.length);i++){if((x.k[i]||0)!==(y.k[i]||0))return (x.k[i]||0)>(y.k[i]||0)?1:-1}return 0}
+function mySeat(t){return (t?.players||[]).findIndex(x=>String(x.id)===String(who))}
+function renderPoker(){let t=poker||{players:[],status:'waiting'},seat=mySeat(t),me=seat>=0?t.players[seat]:null,other=seat===0?t.players[1]:t.players[0];$('seat0').textContent=t.players[0]?safe(t.players[0].name):'Frei';$('seat1').textContent=t.players[1]?safe(t.players[1].name):'Frei';$('joinPoker').disabled=seat>=0||t.players.length>=2||t.status==='playing';$('joinPoker').textContent=seat>=0?'Du sitzt am Tisch':'Am Tisch Platz nehmen';$('startPoker').disabled=!(t.players.length===2&&seat>=0&&t.status!=='playing');$('resetPoker').disabled=!(seat>=0&&t.status!=='playing');$('leavePoker').disabled=seat<0||t.status==='playing';$('pokerAnte').disabled=t.status==='playing';$('pokerStatus').textContent=t.status==='playing'?'Runde läuft':t.status==='finished'?'Runde beendet':'Warte auf Mitspieler';let hand=$('myPokerHand');hand.innerHTML='';if(me?.hand){me.hand.forEach((c,i)=>{let b=document.createElement('button');b.className='poker-card '+(c.red?'red ':'')+(pokerSelected.has(i)?'selected':'');b.textContent=c.t+c.s;b.disabled=t.status!=='playing'||me.drawn;b.onclick=()=>{if(pokerSelected.has(i))pokerSelected.delete(i);else if(pokerSelected.size<3)pokerSelected.add(i);renderPoker()};hand.appendChild(b)})}let op=$('opponentPoker');op.innerHTML='';if(other?.hand){for(let i=0;i<5;i++){let d=document.createElement('div');d.className='poker-card back';d.textContent=t.status==='finished'&&other.hand[i]?other.hand[i].t+other.hand[i].s:'◆';op.appendChild(d)}}$('pokerHint').textContent=t.status!=='playing'?'Platz 1 startet die Runde.':me?.drawn?'Warte auf Mitspieler.':`Wähle Karten zum Tauschen.`;$('drawPoker').disabled=!(t.status==='playing'&&me&&!me.drawn);$('drawPoker').textContent=me?.drawn?'Tausch bestätigt':'Karten tauschen';$('pokerResult').textContent=t.status==='finished'?(t.result||'')+'\n'+victoryLine(t.winId==null?'tie':String(t.winId)===String(who)?'win':'lose'):'';}
+$('joinPoker').onclick=async()=>{try{await pokerChange(t=>{t.players=t.players||[];if(t.status==='playing')throw Error('Eine Runde läuft bereits.');if(t.players.some(x=>String(x.id)===String(who)))return t;if(t.players.length>=2)throw Error('Tisch voll.');t.players.push({id:who,name:person(who).name});return t});toast('Du sitzt am Pokertisch.')}catch(e){toast(e.message)}};
+$('startPoker').onclick=async()=>{let ante=+$('pokerAnte').value;if(!Number.isInteger(ante)||ante<1)return toast('Ungültiger Einsatz.');if(pokerBusy)return;pokerBusy=true;let paid=[];try{let t=poker;if(!t||t.players.length!==2||mySeat(t)<0||t.status==='playing')return;await load();for(let pl of t.players){let a=acct(person(pl.id));if(!a||a.chips<ante)throw Error(pl.name+' hat nicht genug Chips.')}for(let pl of t.players){let receipt=await debitChips(pl.id,ante);paid.push({id:pl.id,receipt})}let deck=pokerDeck();await pokerChange(old=>{let players=old.players.map(pl=>({...pl,hand:[deck.pop(),deck.pop(),deck.pop(),deck.pop(),deck.pop()],drawn:false}));return {...old,players,deck,ante,status:'playing',result:'',startedAt:Date.now()}});await load();refresh();toast('Poker-Runde gestartet!')}catch(e){for(let item of paid)await refundChips(item.id,item.receipt).catch(()=>{});toast(e.message)}finally{pokerBusy=false}};
+$('drawPoker').onclick=async()=>{if(pokerBusy)return;pokerBusy=true;let idx=[...pokerSelected];try{await pokerChange(t=>{let seat=mySeat(t);if(t.status!=='playing'||seat<0||t.players[seat].drawn)throw Error('Nicht verfügbar.');let pl=t.players[seat];pl.hand=pl.hand.map((c,i)=>idx.includes(i)?t.deck.pop():c);pl.drawn=true;return t});pokerSelected.clear();if(poker?.players?.every(x=>x.drawn)){let a=poker.players[0].hand,b=poker.players[1].hand,cmp=pokerCompare(a,b),win=cmp===0?-1:cmp>0?0:1,ante=poker.ante,pot=ante*2;if(win<0){for(let pl of poker.players)await creditChips(pl.id,ante)}else await creditChips(poker.players[win].id,pot);await pokerChange(t=>({...t,status:'finished',winId:win<0?null:t.players[win].id,result:win<0?'Unentschieden.':`${t.players[win].name} gewinnt mit ${pokerNames[pokerEval(t.players[win].hand).rank]} (${pot} Chips).`}))}await load();refresh();renderPoker()}catch(e){toast(e.message)}finally{pokerBusy=false}};
+$('leavePoker').onclick=async()=>{try{await pokerChange(t=>{t.players=(t.players||[]).filter(x=>String(x.id)!==String(who));if(!t.players.length)t.status='waiting';return t});toast('Aufgestanden.')}catch(e){toast(e.message)}};
+$('resetPoker').onclick=async()=>{if(!confirm('Pokertisch zurücksetzen?'))return;try{await pokerChange(t=>({players:[],status:'waiting'}));toast('Tisch zurückgesetzt.')}catch(e){toast(e.message)}};
+
+// Hold'em Logic
+function hdPost(p,a){a=Math.min(a,p.stack);p.stack-=a;p.bet+=a;p.tot+=a;if(!p.stack)p.allin=true}
+function hdNext(t,i){let n=t.players.length;for(let k=1;k<=n;k++){let j=(i+k+n)%n,p=t.players[j];if(p.in&&!p.folded&&!p.allin)return j}return -1}
+function hdBest(c){let b=null;for(let i=0;i<7;i++)for(let j=i+1;j<7;j++){let h=c.filter((_,k)=>k!==i&&k!==j);if(!b||pokerCompare(h,b)>0)b=h}return b}
+function hdShow(t){let al=t.players.filter(p=>!p.folded);al.forEach(p=>p.best=hdBest([...p.hole,...t.board]));let lv=[...new Set(t.players.map(p=>p.tot).filter(x=>x>0))].sort((a,b)=>a-b),prev=0,won={};lv.forEach(L=>{let con=t.players.filter(p=>p.tot>=L),amt=(L-prev)*con.length;prev=L;let el=con.filter(p=>!p.folded);if(!el.length)el=al;let w=[el[0]];for(let p of el.slice(1)){let c=pokerCompare(p.best,w[0].best);if(c>0)w=[p];else if(c===0)w.push(p)}let each=Math.floor(amt/w.length);w.forEach((p,i)=>{let g=each+(i===0?amt-each*w.length:0);p.stack+=g;won[p.id]=(won[p.id]||0)+g})});t.result=t.players.filter(p=>won[p.id]).map(p=>p.name+' +'+won[p.id]).join(' · ');t.winId=Object.keys(won).sort((a,b)=>won[b]-won[a])[0];t.players.forEach(p=>delete p.best);t.status='finished';t.shown=true}
+function hdCheck(t,from){let al=t.players.filter(p=>!p.folded);if(al.length===1){let pot=t.players.reduce((a,p)=>a+p.tot,0);al[0].stack+=pot;t.result=al[0].name+' gewinnt '+pot+' Chips.';t.winId=al[0].id;t.status='finished';t.shown=false;return}let can=al.filter(p=>!p.allin),done=can.every(p=>p.acted&&p.bet===t.max)||(can.length<=1&&(!can.length||can[0].bet>=t.max));if(!done){t.cur=hdNext(t,from);return}t.board=t.board||[];while(true){if(t.stage==='river'){hdShow(t);return}t.players.forEach(p=>{p.bet=0;p.acted=false});t.max=0;t.last=t.bb;if(t.stage==='preflop'){t.stage='flop';t.board.push(t.deck.pop(),t.deck.pop(),t.deck.pop())}else{t.stage=t.stage==='flop'?'turn':'river';t.board.push(t.deck.pop())}if(can.length>1){t.cur=hdNext(t,t.dealer);return}}}
+function hdStart(t,bb){let d=pokerDeck(),n=t.players.length;t.bb=bb;t.board=[];t.stage='preflop';t.startedAt=Date.now();t.result='';t.winId=null;t.shown=false;t.players.forEach(p=>{p.in=true;p.folded=false;p.allin=false;p.bet=0;p.tot=0;p.acted=false;p.hole=[d.pop(),d.pop()]});t.dealer=((t.dealer??-1)+1)%n;t.deck=d;let sb=n===2?t.dealer:(t.dealer+1)%n,bi=(sb+1)%n;hdPost(t.players[sb],Math.max(1,bb>>1));hdPost(t.players[bi],bb);t.max=bb;t.last=bb;t.status='playing';hdCheck(t,n===2?(sb-1+n)%n:bi)}
+function hdAct(t,s,a,to){let p=t.players[s];if(a==='fold')p.folded=true;else if(a==='call')hdPost(p,Math.min(t.max-p.bet,p.stack));else{let cap=p.bet+p.stack;to=Math.min(to,cap);if(!(to>t.max))throw Error('Raise muss über dem Einsatz liegen.');if(to<t.max+t.last&&to<cap)throw Error('Mindest-Raise auf '+(t.max+t.last)+'.');hdPost(p,to-p.bet);t.last=Math.max(t.last,p.bet-t.max);t.max=Math.max(t.max,p.bet);t.players.forEach(q=>{if(q!==p&&!q.folded&&!q.allin)q.acted=false})}p.acted=true;hdCheck(t,s)}
+let hd=null,hdBusy=false,lastHd=null;
+function hdUrl(){return cfg.url.replace(/\/$/,'')+'/casino/'+encodeURIComponent(cfg.room)+'/holdem.json'}
+function hdSeat(t){return (t?.players||[]).findIndex(x=>String(x.id)===String(who))}
+async function hdChange(fn){hd=await atomicJson(hdUrl(),old=>{let t=old||{players:[],status:'waiting'};t.players=t.players||[];t.board=t.board||[];return fn(t)});renderHd();return hd}
+async function hdRead(){hd=await get(hdUrl()).catch(()=>null);if(lastHd===null)lastHd=hd?.status==='finished'?hd.startedAt:0;renderHd()}
+const cs2=c=>`<div class="poker-card ${c.red?'red':''}">${c.t}${c.s}</div>`;
+function renderHd(){let t=hd||{players:[],status:'waiting'},P=t.players||[],s=hdSeat(t),me=s>=0?P[s]:null,turn=t.status==='playing'&&me&&t.cur===s,play=t.status==='playing';
+$('hdPot').textContent=P.reduce((a,p)=>a+(p.tot||0),0);$('hdBoard').innerHTML=(t.board||[]).map(cs2).join('')||'<span class="sub">Noch keine Gemeinschaftskarten</span>';$('hdHole').innerHTML=me?.hole&&me.in?me.hole.map(cs2).join(''):'';
+$('hdSeats').innerHTML=P.map((p,i)=>`<div class="account"><div><strong>${safe(p.name)} ${play&&i===t.dealer?'🔘':''} ${play&&t.cur===i?'👉':''}</strong><span class="sub">${p.stack} Chips${p.bet?' · Einsatz '+p.bet:''}${p.folded?' · gefoldet':''}${p.allin?' · All-in':''}</span></div><div>${t.status==='finished'&&t.shown&&!p.folded&&p.hole?p.hole.map(c=>c.t+c.s).join(' '):''}</div></div>`).join('')||'<div class="sub">Niemand am Tisch.</div>';
+$('hdStatus').textContent=play?`${t.stage} · ${P[t.cur]?safe(P[t.cur].name)+' ist dran':''}`:t.status==='finished'?'Runde beendet':'Warte auf Spieler ('+P.length+'/6)';$('hdResult').textContent=t.status==='finished'?(t.result||'')+'\n'+victoryLine(t.winId==null?'tie':String(t.winId)===String(who)?'win':'lose'):'';
+let call=me?Math.min(t.max-me.bet,me.stack):0;$('hdFold').disabled=!turn;$('hdCall').disabled=!turn;$('hdRaise').disabled=!turn;$('hdCall').textContent=call>0?'Call '+call:'Check';if(turn&&!$('hdRaiseTo').value)$('hdRaiseTo').value=t.max+t.last;if(!turn)$('hdRaiseTo').value='';$('hdJoin').disabled=s>=0||play||P.length>=6;$('hdLeave').disabled=s<0||play;$('hdStart').disabled=s<0||play||P.length<2;$('hdReset').disabled=s<0||play}
+const hdDo=a=>async()=>{if(hdBusy)return;hdBusy=true;let to=Math.floor(+$('hdRaiseTo').value);try{await hdChange(t=>{let s=hdSeat(t);if(t.status!=='playing'||t.cur!==s)throw Error('Du bist nicht dran.');hdAct(t,s,a,to);return t});snd('click')}catch(e){toast(e.message)}finally{hdBusy=false}};
+$('hdFold').onclick=hdDo('fold');$('hdCall').onclick=hdDo('call');$('hdRaise').onclick=hdDo('raise');
+$('hdJoin').onclick=async()=>{let n=+$('hdBuy').value,paid=false,ok=false,receipt=null;if(!Number.isInteger(n)||n<1)return toast('Ungültiger Buy-in.');try{receipt=await debitChips(who,n);paid=true;await hdChange(t=>{if(t.status==='playing')throw Error('Runde läuft bereits.');if(t.players.length>=6)throw Error('Tisch voll.');if(hdSeat(t)>=0)throw Error('Du sitzt schon am Tisch.');t.players.push({id:who,name:person(who).name,stack:n});return t});ok=true;toast('Du sitzt am Hold\'em-Tisch.')}catch(e){toast(e.message)}if(paid&&!ok)await refundChips(who,receipt).catch(()=>{});await load().catch(()=>{});refresh()};
+$('hdLeave').onclick=async()=>{let back=0;try{await hdChange(t=>{if(t.status==='playing')throw Error('Während einer Runde nicht möglich.');let s=hdSeat(t);if(s<0)throw Error('Du sitzt nicht am Tisch.');back=t.players[s].stack;t.players.splice(s,1);if(!t.players.length)t.status='waiting';return t});if(back)await atomicJson(accountUrl(who),a=>({...a,chips:a.chips+back}));await load();refresh();toast(back+' Chips zurück.')}catch(e){toast(e.message)}};
+$('hdStart').onclick=async()=>{let bb=Math.floor(+$('hdBB').value);if(!(bb>=2))return toast('Big Blind mindestens 2.');try{await hdChange(t=>{if(t.status==='playing')throw Error('Runde läuft bereits.');if(hdSeat(t)<0)throw Error('Setz dich zuerst an den Tisch.');t.players=t.players.filter(p=>p.stack>0);if(t.players.length<2)throw Error('Mindestens 2 Spieler nötig.');hdStart(t,bb);return t});snd('click')}catch(e){toast(e.message)}};
+$('hdReset').onclick=async()=>{if(!confirm('Tisch zurücksetzen?'))return;try{let back={};await hdChange(t=>{back={};t.players.forEach(p=>back[p.id]=p.stack);return {players:[],status:'waiting'}});for(let id in back)if(back[id])await atomicJson(accountUrl(id),a=>({...a,chips:(a?.chips||0)+back[id]}));await load();refresh();toast('Tisch geleert.')}catch(e){toast(e.message)}};
+
+try{let x=JSON.parse(localStorage.getItem('casinoCfg')||'null');if(x){cfg=x;$('url').value=x.url;$('room').value=x.room;$('setUrl').value=x.url;$('setRoom').value=x.room}}catch(e){}
+})();
+</script></body></html>
